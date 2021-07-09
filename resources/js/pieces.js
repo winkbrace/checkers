@@ -17,6 +17,12 @@ window.pieces = {
         ctx.drawImage(img, x, y);
     },
 
+    move: function(start, target) {
+        board.grid[start.row][start.col].player = null;
+        board.grid[target.row][target.col].player = start.player;
+        this.redraw(board.grid);
+    },
+
     remove: function(square) {
         board.grid[square.row][square.col].player = null;
         this.redraw(board.grid);

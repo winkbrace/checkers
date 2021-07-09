@@ -23,3 +23,11 @@ Ik gebruik Laravel Mix (wat weer een wrapper is om webpack) om mijn sass en js a
 1. Open [http://127.0.0.1:8000](http://127.0.0.1:8000)
 
 > De gecompilede assets vind je al terug in de source code, dus npm dependencies hoeven niet geinstalleerd te worden.
+
+## Tests
+
+To run the phpunit test
+
+```shell
+./vendor/bin/phpunit
+```
