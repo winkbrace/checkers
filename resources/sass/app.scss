@@ -1,3 +1,14 @@
 body {
     font-family: 'Nova Square', cursive;
 }
+
+.canvas-container {
+    height: 802px;
+    width: 802px;
+}
+
+canvas {
+    position: absolute;
+    top: 1px;
+    left: 1px;
+}
