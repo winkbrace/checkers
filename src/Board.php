@@ -41,6 +41,10 @@ final class Board implements JsonSerializable
         $square = $this->grid[$start->row][$start->col];
         $this->grid[$start->row][$start->col] = new Square($square->row, $square->col, null);
         $this->grid[$target->row][$target->col] = $target;
+        if ($move->capture) {
+            $capture = $move->capture;
+            $this->grid[$capture->row][$capture->col] = new Square($capture->row, $capture->col, null);
+        }
     }
 
     public function jsonSerialize()

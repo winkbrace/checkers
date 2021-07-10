@@ -31,13 +31,16 @@ final class CheckersController extends Controller
         $move = Move::fromInput($input);
 
         try {
-            $this->jury->judge($board, $move);
+            $move = $this->jury->judge($board, $move);
         } catch (\Exception $e) {
             return new JsonResponse(['error' => 'Invalid move: ' . $e->getMessage()], 400);
         }
 
         $board->apply($move);
 
-        return $this->ai->calculateMove($board);
+        return [
+            'move' => $move,
+            'ai' => $this->ai->calculateMove($board),
+        ];
     }
 }

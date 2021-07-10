@@ -11,6 +11,11 @@ final class InvalidMove extends \Exception
         return new self("This is not a move. You end on the same square you started: {$move->target}.");
     }
 
+    public static function notDiagonal(Move $move) : self
+    {
+        return new self("Invalid move. You didn't move diagonal: {$move->target}.");
+    }
+
     public static function toWhiteSquare(Move $move) : self
     {
         return new self("Invalid Move to {$move->target}. That ends on a white square.");

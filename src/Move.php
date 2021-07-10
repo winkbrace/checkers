@@ -20,9 +20,17 @@ final class Move implements JsonSerializable
     public function __construct(public Square $start, public Square $target, public ?Square $capture = null)
     {}
 
+    /**
+     * In this equals we only compare the start and target cell. Capture can or cannot be filled yet.
+     */
     public function equals(self $other) : bool
     {
-        return $this->jsonSerialize() === $other->jsonSerialize();
+        return $this->start->equals($other->start) && $this->target->equals($other->target);
+    }
+
+    public function __toString() : string
+    {
+        return json_encode($this, JSON_THROW_ON_ERROR);
     }
 
     public function jsonSerialize()
@@ -30,6 +38,7 @@ final class Move implements JsonSerializable
         return [
             'start' => $this->start->jsonSerialize(),
             'target' => $this->target->jsonSerialize(),
+            'capture' => $this->capture ? $this->capture->jsonSerialize() : null,
         ];
     }
 }

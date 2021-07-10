@@ -8,7 +8,7 @@ final class MovesCollection extends Collection
 {
     public function containsMove(Move $move) : bool
     {
-        /** @var Move $move */
+        /** @var Move $allowed */
         foreach ($this->items as $allowed) {
             if ($allowed->equals($move)) {
                 return true;
@@ -16,5 +16,17 @@ final class MovesCollection extends Collection
         }
 
         return false;
+    }
+
+    public function addCapture(Move $move) : Move
+    {
+        /** @var Move $allowed */
+        foreach ($this->items as $allowed) {
+            if ($allowed->equals($move)) {
+                return $allowed;
+            }
+        }
+
+        return $move;
     }
 }

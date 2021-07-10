@@ -13,12 +13,16 @@ use Illuminate\Support\Collection;
  */
 final class Jury
 {
-    public function judge(Board $board, Move $move) : bool
+    public function judge(Board $board, Move $move) : Move
     {
         $this->validateMove($move);
         $allowed = $this->getAllowedMovesFor($board, $move->start->player);
 
-        return $allowed->containsMove($move);
+        if ( ! $allowed->containsMove($move)) {
+            throw new InvalidMove("The move to {$move->target} is not allowed.");
+        }
+
+        return $allowed->addCapture($move);
     }
 
     /**
@@ -26,11 +30,17 @@ final class Jury
      */
     public function validateMove(Move $move) : void
     {
+        if ( ! $move->target->isBlack()) {
+            throw InvalidMove::toWhiteSquare($move);
+        }
         if ($move->start->equals($move->target)) {
             throw InvalidMove::notMoved($move);
         }
-        if ( ! $move->target->isBlack()) {
-            throw InvalidMove::toWhiteSquare($move);
+        if ($move->start->row === $move->target->row || $move->start->col === $move->target->col) {
+            throw InvalidMove::notDiagonal($move);
+        }
+        if (abs($move->start->row - $move->target->row) !== abs($move->start->col - $move->target->col)) {
+            throw InvalidMove::notDiagonal($move);
         }
         if ( ! $move->target->isEmpty()) {
             throw InvalidMove::toOccupied($move);
@@ -88,7 +98,7 @@ final class Jury
             return new Move(
                 $piece,
                 new Square($target['row'], $target['col'], null),
-                $capture ? $board->getSquare($capture['row'], $capture['col']) : null // TODO make this work. For some reason it's not returned
+                $capture ? $board->getSquare($capture['row'], $capture['col']) : null
             );
         });
     }

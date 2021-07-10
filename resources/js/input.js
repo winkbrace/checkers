@@ -16,12 +16,12 @@ window.input = {
     registerPickUpListener: function() {
         // start dragging a piece on mousedown
         this.canvas.addEventListener('mousedown', e => {
-            this.startSquare = { ...board.getSquare(e.offsetX, e.offsetY) }; // store a clone before we remove the piece from the square
+            this.startSquare = board.getSquare(e.offsetX, e.offsetY);
 
             this.draggingPiece = null;
             if (this.startSquare && this.startSquare.player === this.playerColor) {
                 this.draggingPiece = this.startSquare.player;
-                pieces.remove(this.startSquare);
+                pieces.hide(this.startSquare);
             }
         });
     },
@@ -58,24 +58,27 @@ window.input = {
                     };
                     await fetch('api/move', config)
                         .then(response => response.json())
-                        .then(move => {
-                            console.log(move);
-                            if (move.error) {
-                                pieces.undo(startSquare);
-                                throw new Error(move.error);
+                        .then(response => {
+                            // console.log(response);
+                            if (response.error) {
+                                pieces.redraw();
+                                throw new Error(response.error);
                             }
-                            // our move was valid, so make it.
+                            // our move was valid, so make it. Also remove the captured stone if we captured.
                             board.grid[startSquare.row][startSquare.col].player = null;
                             board.grid[targetSquare.row][targetSquare.col].player = 'white';
-                            // then make opponents turn
-                            pieces.move(move.start, move.target);
-                            if (move.capture) {
-                                pieces.remove(move.capture);
+                            if (response.move.capture) {
+                                board.remove(response.move.capture);
                             }
-                            console.log(board.grid);
+                            // then make opponents turn
+                            pieces.move(response.ai.start, response.ai.target);
+                            if (response.ai.capture) {
+                                board.remove(response.ai.capture);
+                            }
+                            pieces.redraw();
                         })
                         .catch(error => {
-                            pieces.undo(startSquare)
+                            pieces.redraw()
                         })
                 })();
             }

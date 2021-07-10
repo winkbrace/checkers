@@ -26,7 +26,7 @@ Ik gebruik Laravel Mix (wat weer een wrapper is om webpack) om mijn sass en js a
 
 ## Tests
 
-To run the phpunit test
+To run the phpunit tests
 
 ```shell
 ./vendor/bin/phpunit

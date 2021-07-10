@@ -100,7 +100,11 @@ window.board = {
         } else {
             return null;
         }
-    }
+    },
+
+    remove: function(square) {
+        this.grid[square.row][square.col].player = null;
+    },
 };
 
 window.board.init();
